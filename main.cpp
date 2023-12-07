@@ -49,7 +49,7 @@ public:
     void display() {
         Node<T>* current = head;
         while (current != nullptr) {
-            cout << current->data.ID << ": " << current->data.Name << " (Age: " << current->data.Age << ", Salary: $" << current->data.Salary << ") ";
+            cout << current->data.ID << ": " << current->data.Name << " (Age: " << current->data.Age << ", Salary: $" << current->data.Salary << ")\n";
             current = current->next;
         }
         cout << endl;
@@ -135,7 +135,7 @@ int main() {
                 break;
             }
             case 2:
-                cout << "Players: ";
+                cout << "Players:\n";
                 playersList.display();
                 this_thread::sleep_for(chrono::seconds(2));  // Sleep for 2 seconds
                 break;
@@ -150,6 +150,8 @@ int main() {
             }
             case 4: {
                 int idToSearch;
+                cout << "Enter player ID to search: ";
+                cin >> idToSearch;
                 playersList.searchPlayer(idToSearch);
                 this_thread::sleep_for(chrono::seconds(2));  // Sleep for 2 seconds
                 break;
