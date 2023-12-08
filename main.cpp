@@ -10,19 +10,22 @@ template <typename T>
 struct Node
 {
     T data;
-    Node *next;
+    Node* next;
 
     Node(T value) : data(value), next(nullptr) {}
 };
 
 template <typename T>
+
 class LinkedList
 {
+
 private:
-    Node<T> *head;
+    Node<T>* head;
 
 public:
     LinkedList() : head(nullptr) {}
+
 
     Node<T> *getHead() const
     {
@@ -33,20 +36,18 @@ public:
     {
         Node<T> *newNode = new Node<T>(value);
 
-        if (head == nullptr)
-        {
+
+        if (head == nullptr) {
             head = newNode;
-        }
-        else
-        {
-            Node<T> *current = head;
-            while (current->next != nullptr)
-            {
+        } else {
+            Node<T>* current = head;
+            while (current->next != nullptr) {
                 current = current->next;
             }
             current->next = newNode;
         }
     }
+
     void display()
     {
         Node<T> *current = head;
@@ -54,9 +55,30 @@ public:
         while (current != nullptr)
         {
             current->data.display(); // Call display function for each element
+
             current = current->next;
         }
     }
+    void displayTeams() {
+        Team* current = teams;
+        while (current != nullptr) {
+            std::cout << "Team ID: " << current->id << ", Name: " << current->name << ", President: " << current->president << std::endl;
+            current = current->next;
+        }
+    }
+
+
+    Team* SearchTeam(int id) {
+        Team* current = teams;
+        while (current != nullptr) {
+            if (current->id == id) {
+                return current;
+            }
+            current = current->next;
+        }
+        return nullptr;
+    }
+
 
     void remove(int id)
     {
@@ -86,6 +108,7 @@ public:
             current = current->next;
         }
     }
+
 
     ~LinkedList()
     {
@@ -200,6 +223,7 @@ int main()
     egyptianLeague.getHead()->data.removePlayer(11);
     egyptianLeague.getHead()->data.removePlayer(7);
     egyptianLeague.display();
+
 
     return 0;
 }
