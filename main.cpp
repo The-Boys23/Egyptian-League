@@ -15,6 +15,14 @@ struct Player {
     // Add more player details as needed
     Player(int id, const string& name, int age, double salary) : ID(id), Name(name), Age(age), Salary(salary) {}
 };
+struct Team{
+    int id ;
+    string name ;
+    string president;
+    Player* players;
+    Team*next;
+    Team(int teamId, const string& teamName, const string& teamPresident) : id(teamId), name(teamName), president(teamPresident), players(nullptr), next(nullptr) {} 
+};
 
 template <typename T>
 struct Node {
@@ -46,6 +54,12 @@ public:
         }
     }
 
+    void AddTeam(int id, const string name, const string president) {
+        Team* newTeam = new Team(id, name, president);
+        newTeam->next = teams;
+        teams = newTeam;
+    }
+
     void display() {
         Node<T>* current = head;
         while (current != nullptr) {
@@ -53,6 +67,25 @@ public:
             current = current->next;
         }
         cout << endl;
+    }
+    void displayTeams() {
+        Team* current = teams;
+        while (current != nullptr) {
+            std::cout << "Team ID: " << current->id << ", Name: " << current->name << ", President: " << current->president << std::endl;
+            current = current->next;
+        }
+    }
+
+
+    Team* SearchTeam(int id) {
+        Team* current = teams;
+        while (current != nullptr) {
+            if (current->id == id) {
+                return current;
+            }
+            current = current->next;
+        }
+        return nullptr;
     }
 
     void removePlayer(int id) {
@@ -93,6 +126,7 @@ public:
 
         cout << "Player not found with ID: " << id << endl;
     }
+    
 
     ~LinkedList() {
         Node<T>* current = head;
