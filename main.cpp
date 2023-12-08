@@ -1,12 +1,60 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
-template <typename T>
+struct Player
+{
+    int ID;
+    string Name;
+    int Age;
+    double Salary;
 
+    Player(int id, const string &name, int age, double salary) : ID(id), Name(name), Age(age), Salary(salary) {}
+};
+
+class Team
+{
+private:
+    int id;
+    string name;
+    string president;
+    LinkedList<Player> *players;
+
+public:
+    Team(int teamId, const string &teamName, const string &teamPresident) : id(teamId), name(teamName), president(teamPresident), players(nullptr) {}
+
+    void AddPlayer(int id, const string &name, int age, double salary)
+    {
+        if (players == nullptr)
+        {
+            players = new LinkedList<Player>();
+        }
+        players->add({id, name, age, salary});
+    }
+
+    void DisplayTeam()
+    {
+        cout << "Team ID: " << id << ", Name: " << name << ", President: " << president << endl;
+        if (players != nullptr)
+        {
+            cout << "Players:\n";
+            players->display();
+        }
+        cout << endl;
+    }
+
+    ~Team()
+    {
+        delete players;
+    }
+};
+
+template <typename T>
 struct Node
 {
-public:
     T data;
     Node *next;
 
@@ -14,7 +62,6 @@ public:
 };
 
 template <typename T>
-
 class LinkedList
 {
 private:
@@ -47,49 +94,36 @@ public:
         Node<T> *current = head;
         while (current != nullptr)
         {
-            cout << current->data << " ";
+            cout << current->data.ID << ": " << current->data.Name << " (Age: " << current->data.Age << ", Salary: $" << current->data.Salary << ")\n";
             current = current->next;
         }
         cout << endl;
     }
 
-    // We can tweak it to take a key to search for it inside every (Team, Player) and remove it
-    void remove(T value)
+    ~LinkedList()
     {
         Node<T> *current = head;
-        Node<T> *previous = nullptr;
-
         while (current != nullptr)
         {
-            if (current->data == value)
-            {
-                if (previous == nullptr)
-                {
-                    head = current->next;
-                }
-                else
-                {
-                    previous->next = current->next;
-                }
-                delete current;
-                return;
-            }
-            previous = current;
-            current = current->next;
+            Node<T> *next = current->next;
+            delete current;
+            current = next;
         }
     }
 };
 
 int main()
 {
-    // Example of using a Generic LinkedList
-    // LinkedList<int> list;
-    // list.add(1);
-    // list.add(2);
-    // list.add(3);
-    // list.add(4);
-    // list.display();
-    // list.remove(3);
-    // list.display();
+    LinkedList<Team> teams;
+
+    // Team team1(1, "Team A", "President A");
+
+    // team1.AddPlayer(1, "Player 1", 25, 50000);
+    // team1.AddPlayer(2, "Player 2", 28, 60000);
+
+    // teams.add(team1);
+
+    // teams.display();
+
     return 0;
 }
