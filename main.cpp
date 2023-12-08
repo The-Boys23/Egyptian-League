@@ -1,31 +1,14 @@
 #include <iostream>
 #include <string>
-#include <chrono>   // for this_thread::sleep_for
-#include <thread>   // for this_thread::sleep_for
+#include <chrono>
+#include <thread>
+#include <vector>
 
 using namespace std;
 
-// Player structure
-struct Player {
-    int ID;
-    string Name;
-    int Age;
-    double Salary;
-
-    // Add more player details as needed
-    Player(int id, const string& name, int age, double salary) : ID(id), Name(name), Age(age), Salary(salary) {}
-};
-struct Team{
-    int id ;
-    string name ;
-    string president;
-    Player* players;
-    Team*next;
-    Team(int teamId, const string& teamName, const string& teamPresident) : id(teamId), name(teamName), president(teamPresident), players(nullptr), next(nullptr) {} 
-};
-
 template <typename T>
-struct Node {
+struct Node
+{
     T data;
     Node* next;
 
@@ -33,15 +16,26 @@ struct Node {
 };
 
 template <typename T>
-class LinkedList {
+
+class LinkedList
+{
+
 private:
     Node<T>* head;
 
 public:
     LinkedList() : head(nullptr) {}
 
-    void add(T value) {
-        Node<T>* newNode = new Node<T>(value);
+
+    Node<T> *getHead() const
+    {
+        return head;
+    }
+
+    void add(T value)
+    {
+        Node<T> *newNode = new Node<T>(value);
+
 
         if (head == nullptr) {
             head = newNode;
@@ -54,19 +48,16 @@ public:
         }
     }
 
-    void AddTeam(int id, const string name, const string president) {
-        Team* newTeam = new Team(id, name, president);
-        newTeam->next = teams;
-        teams = newTeam;
-    }
+    void display()
+    {
+        Node<T> *current = head;
 
-    void display() {
-        Node<T>* current = head;
-        while (current != nullptr) {
-            cout << current->data.ID << ": " << current->data.Name << " (Age: " << current->data.Age << ", Salary: $" << current->data.Salary << ")\n";
+        while (current != nullptr)
+        {
+            current->data.display(); // Call display function for each element
+
             current = current->next;
         }
-        cout << endl;
     }
     void displayTeams() {
         Team* current = teams;
@@ -88,116 +79,151 @@ public:
         return nullptr;
     }
 
-    void removePlayer(int id) {
-        Node<T>* current = head;
-        Node<T>* previous = nullptr;
 
-        while (current != nullptr) {
-            if (current->data.ID == id) {
-                if (previous == nullptr) {
-                    head = current->next;
-                } else {
-                    previous->next = current->next;
-                }
-                delete current;
-                return;
-            }
-            previous = current;
-            current = current->next;
-        }
-    }
-
-    // Search for a player by ID and display their information
-    void searchPlayer(int id) {
-        if (head == nullptr) {
-            cout << "The player list is empty.\n";
+    void remove(int id)
+    {
+        if (head == nullptr)
+        {
             return;
         }
 
-        Node<T>* current = head;
+        if (head->data.id == id)
+        {
+            Node<T> *temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
 
-        while (current != nullptr) {
-            if (current->data.ID == id) {
-                cout << "Player found: " << current->data.ID << ": " << current->data.Name << " (Age: " << current->data.Age << ", Salary: $" << current->data.Salary << ")\n";
+        Node<T> *current = head;
+        while (current->next != nullptr)
+        {
+            if (current->next->data.id == id)
+            {
+                Node<T> *temp = current->next;
+                current->next = current->next->next;
+                delete temp;
                 return;
             }
             current = current->next;
         }
-
-        cout << "Player not found with ID: " << id << endl;
     }
-    
 
-    ~LinkedList() {
-        Node<T>* current = head;
-        while (current != nullptr) {
-            Node<T>* next = current->next;
+
+    ~LinkedList()
+    {
+        Node<T> *current = head;
+        while (current != nullptr)
+        {
+            Node<T> *next = current->next;
             delete current;
             current = next;
         }
     }
 };
 
-int main() {
-    LinkedList<Player> playersList;  // Use LinkedList to manage players
+struct Player
+{
+    int id;
+    string name;
+    int age;
+    double salary;
 
-    int choice;
-    do {
-        cout << "1. Add Player\n";
-        cout << "2. Display Players\n";
-        cout << "3. Remove Player\n";
-        cout << "4. Search Player\n";
-        cout << "5. Exit\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
+    Player(int id, const string &name, int age, double salary) : id(id), name(name), age(age), salary(salary) {}
 
-        switch (choice) {
-            case 1: {
-                int id, age;
-                double salary;
-                string name;
-                cout << "Enter player ID: ";
-                cin >> id;
-                cout << "Enter player name: ";
-                cin.ignore();  // Clear buffer
-                getline(cin, name);
-                cout << "Enter player age: ";
-                cin >> age;
-                cout << "Enter player salary: $";
-                cin >> salary;
-                playersList.add({id, name, age, salary});
-                break;
-            }
-            case 2:
-                cout << "Players:\n";
-                playersList.display();
-                this_thread::sleep_for(chrono::seconds(2));  // Sleep for 2 seconds
-                break;
-            case 3: {
-                int idToRemove;
-                cout << "Enter player ID to remove: ";
-                cin >> idToRemove;
-                playersList.removePlayer(idToRemove);
-                cout << "Player removed successfully.\n";
-                this_thread::sleep_for(chrono::seconds(2));  // Sleep for 2 seconds
-                break;
-            }
-            case 4: {
-                int idToSearch;
-                cout << "Enter player ID to search: ";
-                cin >> idToSearch;
-                playersList.searchPlayer(idToSearch);
-                this_thread::sleep_for(chrono::seconds(2));  // Sleep for 2 seconds
-                break;
-            }
-            case 5:
-                cout << "Exiting program.\n";
-                break;
-            default:
-                cout << "Invalid choice. Please try again.\n";
+    void display()
+    {
+        cout << id << " " << name << " " << age << " " << salary << endl;
+    }
+
+    // TODO: Update player information
+
+    friend class LinkedList<Player>;
+};
+
+class Team
+{
+private:
+    int id;
+    string name;
+    string president;
+    LinkedList<Player> *players;
+
+public:
+    Team(int teamId, const string &teamName, const string &teamPresident) : id(teamId), name(teamName), president(teamPresident), players(nullptr) {}
+
+    void addPlayer(int id, const string &name, int age, double salary)
+    {
+        if (players == nullptr)
+        {
+            players = new LinkedList<Player>();
+        }
+        players->add({id, name, age, salary});
+    }
+
+    void removePlayer(int id)
+    {
+        if (players != nullptr)
+        {
+            players->remove(id);
+        }
+    }
+
+    void display()
+    {
+        cout << "Team ID: " << id << endl;
+        cout << "Team Name: " << name << endl;
+        cout << "Team President: " << president << endl;
+        cout << "Team Players: " << endl;
+        if (players != nullptr)
+        {
+            players->display();
         }
 
-    } while (choice != 5);
+        cout << endl;
+    }
+
+    // TODO: Implement search for a team by id
+    // TODO: Update team information
+    // TODO: search for a player by name
+
+    ~Team()
+    {
+        delete players;
+    }
+};
+
+int main()
+{
+    LinkedList<Team> egyptianLeague;
+    egyptianLeague.add({1, "Al Ahly", "Mahmoud El Khatib"});
+    egyptianLeague.add({2, "Zamalek", "Mortada Mansour"});
+    egyptianLeague.add({3, "Al Masry", "Samir Halabia"});
+    egyptianLeague.add({4, "Al Ittihad", "Mohamed Moselhy"});
+    egyptianLeague.add({5, "Al Mokawloon", "Mohamed Abdel Salam"});
+    egyptianLeague.add({6, "Al Entag Al Harby", "Mohamed Kamel"});
+    egyptianLeague.add({7, "Al Gouna", "Mohamed Abou El Soud"});
+
+    // Add players to Al Ahly
+    egyptianLeague.getHead()->data.addPlayer(11, "Mohamed Salah", 30, 1000000.0);
+    egyptianLeague.getHead()->data.addPlayer(7, "Mohamed El Neny", 29, 800000.0);
+
+    // Add players to Zamalek
+    egyptianLeague.getHead()->next->data.addPlayer(10, "Achraf Bencharki", 27, 900000.0);
+    egyptianLeague.getHead()->next->data.addPlayer(22, "Tarek Hamed", 29, 850000.0);
+
+    // Add players to Al Masry
+    egyptianLeague.getHead()->next->next->data.addPlayer(14, "Ahmed Gomaa", 25, 700000.0);
+    egyptianLeague.getHead()->next->next->data.addPlayer(8, "Hossam Hassan", 22, 600000.0);
+
+    // Display the league
+    egyptianLeague.display();
+
+    // Remove players from Al Ahly
+    egyptianLeague.getHead()->data.removePlayer(11);
+    egyptianLeague.getHead()->data.removePlayer(7);
+    egyptianLeague.display();
+
 
     return 0;
 }
