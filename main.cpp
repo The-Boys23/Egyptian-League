@@ -105,6 +105,7 @@ public:
 
 struct Player
 {
+public:
     int id;
     string name;
     int age;
@@ -116,8 +117,6 @@ struct Player
     {
         cout << id << " " << name << " " << age << " " << salary << endl;
     }
-
-    // TODO: Update player information
 
     friend class LinkedList<Player>;
 };
@@ -140,6 +139,28 @@ public:
             players = new LinkedList<Player>();
         }
         players->add({id, name, age, salary});
+    }
+
+    void updatePlayer(int id, string name, int age, double salary)
+    {
+        if (players == nullptr)
+        {
+            players = new LinkedList<Player>();
+        }
+        Node<Player> *current = players->getHead();
+        while (current != nullptr)
+        {
+            if (current->data.id == id)
+            {
+                current->data.name = (!name.empty()) ? name : current->data.name;
+                current->data.age = (age != 0) ? age : current->data.age;
+                current->data.salary = (salary != 0.0) ? salary : current->data.salary;
+                cout << "Player updated successfully" << endl;
+                return;
+            }
+            current = current->next;
+        }
+        cout << "Player not found" << endl;
     }
 
     void removePlayer(int id)
@@ -203,6 +224,10 @@ int main()
     // Remove players from Al Ahly
     egyptianLeague.getHead()->data.removePlayer(11);
     egyptianLeague.getHead()->data.removePlayer(7);
+
+    egyptianLeague.getHead()->next->data.updatePlayer(10, "Achraf Bencharki", 28, 900000.0);
+
+    // Display the league
     egyptianLeague.display();
 
     return 0;
