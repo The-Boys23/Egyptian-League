@@ -125,7 +125,7 @@ public:
 
     void display()
     {
-        cout << id << " " << name << " " << age << " " << salary << endl;
+        cout << id << " " << name << " " << age << " " << salary << "$" << endl;
     }
 
     friend class LinkedList<Player>;
@@ -237,38 +237,211 @@ public:
     }
 };
 
+void displayMenu()
+{
+    cout << "----- Menu -----" << endl;
+    cout << "1. Add Team" << endl;
+    cout << "2. Add Player to Team" << endl;
+    cout << "3. Update Player Information" << endl;
+    cout << "4. Remove Player from Team" << endl;
+    cout << "5. Update Team Information" << endl;
+    cout << "6. Display Team Details" << endl;
+    cout << "7. Remove Team" << endl;
+    cout << "8. Exit" << endl;
+}
+
 int main()
 {
     LinkedList<Team> egyptianLeague;
-    egyptianLeague.add({1, "Al Ahly", "Mahmoud El Khatib"});
-    egyptianLeague.add({2, "Zamalek", "Mortada Mansour"});
-    egyptianLeague.add({3, "Al Masry", "Samir Halabia"});
-    egyptianLeague.add({4, "Al Ittihad", "Mohamed Moselhy"});
-    egyptianLeague.add({5, "Al Mokawloon", "Mohamed Abdel Salam"});
-    egyptianLeague.add({6, "Al Entag Al Harby", "Mohamed Kamel"});
-    egyptianLeague.add({7, "Al Gouna", "Mohamed Abou El Soud"});
 
-    // Add players to Al Ahly
-    egyptianLeague.getHead()->data.addPlayer(11, "Mohamed Salah", 30, 1000000.0);
-    egyptianLeague.getHead()->data.addPlayer(7, "Mohamed El Neny", 29, 800000.0);
+    int choice;
+    do
+    {
+        displayMenu();
+        cout << "Enter your choice: ";
+        cin >> choice;
 
-    // Add players to Zamalek
-    egyptianLeague.getHead()->next->data.addPlayer(10, "Achraf Bencharki", 27, 600000.0);
-    egyptianLeague.getHead()->next->data.addPlayer(22, "Tarek Hamed", 29, 850000.0);
+        switch (choice)
+        {
+        case 1:
+        {
 
-    // Add players to Al Masry
-    egyptianLeague.getHead()->next->next->data.addPlayer(14, "Ahmed Gomaa", 25, 700000.0);
-    egyptianLeague.getHead()->next->next->data.addPlayer(8, "Hossam Hassan", 22, 600000.0);
+            int teamId;
+            string teamName, teamPresident;
+            cout << "Enter Team ID: ";
+            cin >> teamId;
+            cout << "Enter Team Name: ";
+            cin.ignore();
+            getline(cin, teamName);
+            cout << "Enter Team President: ";
+            getline(cin, teamPresident);
 
-    // Display the league
-    egyptianLeague.getHead()->data.updateTeamInfo("New Al Ahly", "New Mahmoud El Khatib");
-    Node<Team> *team = egyptianLeague.searchById(2);
-    team->data.updateTeamInfo("New Zamalek", "New Mortada Mansour");
+            Team newTeam(teamId, teamName, teamPresident);
+            egyptianLeague.add(newTeam);
 
-    egyptianLeague.remove(1);
+            cout << "Team added successfully!" << endl;
+            break;
+        }
+        case 2:
+        {
 
-    // Display the league
-    egyptianLeague.getHead()->data.display("bySalary");
+            int teamId, playerId, age;
+            double salary;
+            string playerName;
+
+            cout << "Enter Team ID: ";
+            cin >> teamId;
+
+            Node<Team> *teamNode = egyptianLeague.searchById(teamId);
+
+            if (teamNode != nullptr)
+            {
+                cout << "Enter Player ID: ";
+                cin >> playerId;
+                cout << "Enter Player Name: ";
+                cin.ignore();
+                getline(cin, playerName);
+                cout << "Enter Player Age: ";
+                cin >> age;
+                cout << "Enter Player Salary: ";
+                cin >> salary;
+
+                teamNode->data.addPlayer(playerId, playerName, age, salary);
+                cout << "Player added to the team successfully!" << endl;
+            }
+            else
+            {
+                cout << "Team not found!" << endl;
+            }
+            break;
+        }
+        case 3:
+        {
+
+            int teamId, playerId, age;
+            double salary;
+            string playerName;
+
+            cout << "Enter Team ID: ";
+            cin >> teamId;
+
+            Node<Team> *teamNode = egyptianLeague.searchById(teamId);
+
+            if (teamNode != nullptr)
+            {
+                cout << "Enter Player ID: ";
+                cin >> playerId;
+                cout << "Enter New Player Name (Press Enter to keep the same): ";
+                cin.ignore();
+                getline(cin, playerName);
+                cout << "Enter New Player Age (Press 0 to keep the same): ";
+                cin >> age;
+                cout << "Enter New Player Salary (Press 0.0 to keep the same): ";
+                cin >> salary;
+
+                teamNode->data.updatePlayer(playerId, playerName, age, salary);
+            }
+            else
+            {
+                cout << "Team not found!" << endl;
+            }
+            break;
+        }
+        case 4:
+        {
+
+            int teamId, playerId;
+            cout << "Enter Team ID: ";
+            cin >> teamId;
+
+            Node<Team> *teamNode = egyptianLeague.searchById(teamId);
+
+            if (teamNode != nullptr)
+            {
+                cout << "Enter Player ID to remove: ";
+                cin >> playerId;
+                teamNode->data.removePlayer(playerId);
+                cout << "Player removed from the team successfully!" << endl;
+            }
+            else
+            {
+                cout << "Team not found!" << endl;
+            }
+            break;
+        }
+        case 5:
+        {
+
+            int teamId;
+            string newName, newPresident;
+            cout << "Enter Team ID: ";
+            cin >> teamId;
+
+            Node<Team> *teamNode = egyptianLeague.searchById(teamId);
+
+            if (teamNode != nullptr)
+            {
+                cout << "Enter New Team Name (Press Enter to keep the same): ";
+                cin.ignore();
+                getline(cin, newName);
+                cout << "Enter New Team President (Press Enter to keep the same): ";
+                getline(cin, newPresident);
+
+                teamNode->data.updateTeamInfo(newName, newPresident);
+            }
+            else
+            {
+                cout << "Team not found!" << endl;
+            }
+            break;
+        }
+        case 6:
+        {
+
+            int teamId;
+            cout << "Enter Team ID: ";
+            cin >> teamId;
+
+            Node<Team> *teamNode = egyptianLeague.searchById(teamId);
+
+            if (teamNode != nullptr)
+            {
+                teamNode->data.display();
+            }
+            else
+            {
+                cout << "Team not found!" << endl;
+            }
+        }
+        case 7:
+        {
+
+            int teamId;
+            cout << "Enter Team ID to remove: ";
+            cin >> teamId;
+
+            Node<Team> *teamNode = egyptianLeague.searchById(teamId);
+
+            if (teamNode != nullptr)
+            {
+                egyptianLeague.remove(teamId);
+                cout << "Team removed successfully!" << endl;
+            }
+            else
+            {
+                cout << "Team not found!" << endl;
+            }
+            break;
+        }
+        case 8:
+            cout << "Exiting program. Goodbye!" << endl;
+            break;
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+        }
+
+        cout << endl;
+    } while (choice != 7);
 
     return 0;
 }
