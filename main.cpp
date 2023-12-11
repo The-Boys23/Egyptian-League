@@ -198,8 +198,14 @@ public:
         cout << endl;
     }
 
+    void updateTeamInfo(const string &newName, const string &newPresident)
+    {
+        name = (!newName.empty()) ? newName : name;
+        president = (!newPresident.empty()) ? newPresident : president;
+        cout << "Team information updated successfully" << endl;
+    }
+
     // TODO: Update team information
-    // TODO: search for a player by name
 
     ~Team()
     {
@@ -231,18 +237,12 @@ int main()
     egyptianLeague.getHead()->next->next->data.addPlayer(8, "Hossam Hassan", 22, 600000.0);
 
     // Display the league
-    egyptianLeague.display();
+    egyptianLeague.getHead()->data.updateTeamInfo("New Al Ahly", "New Mahmoud El Khatib");
+    Node<Team> *team = egyptianLeague.searchById(2);
+    team->data.updateTeamInfo("New Zamalek", "New Mortada Mansour");
 
-    Node<Player> *player = egyptianLeague.getHead()->data.players->searchById(11);
-    if (player == nullptr)
-    {
-        cout << "Player not found" << endl;
-    }
-    else
-    {
-        cout << "Player found" << endl;
-        player->data.display();
-    }
+    // Display the league
+    egyptianLeague.display();
 
     return 0;
 }
