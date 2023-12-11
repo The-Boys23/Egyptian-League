@@ -56,10 +56,24 @@ public:
 
         while (current != nullptr)
         {
-            current->data.display(); // Call display function for each element
+            current->data.display();
 
             current = current->next;
         }
+    }
+
+    Node<T> *searchById(int teamId)
+    {
+        Node<T> *current = head;
+        while (current != nullptr)
+        {
+            if (current->data.id == teamId)
+            {
+                return current;
+            }
+            current = current->next;
+        }
+        return nullptr;
     }
 
     void remove(int id)
@@ -123,13 +137,12 @@ public:
 
 class Team
 {
-private:
+public:
     int id;
     string name;
     string president;
     LinkedList<Player> *players;
 
-public:
     Team(int teamId, const string &teamName, const string &teamPresident) : id(teamId), name(teamName), president(teamPresident), players(nullptr) {}
 
     void addPlayer(int id, const string &name, int age, double salary)
@@ -185,7 +198,6 @@ public:
         cout << endl;
     }
 
-    // TODO: Implement search for a team by id
     // TODO: Update team information
     // TODO: search for a player by name
 
@@ -221,14 +233,16 @@ int main()
     // Display the league
     egyptianLeague.display();
 
-    // Remove players from Al Ahly
-    egyptianLeague.getHead()->data.removePlayer(11);
-    egyptianLeague.getHead()->data.removePlayer(7);
-
-    egyptianLeague.getHead()->next->data.updatePlayer(10, "Achraf Bencharki", 28, 900000.0);
-
-    // Display the league
-    egyptianLeague.display();
+    Node<Player> *player = egyptianLeague.getHead()->data.players->searchById(11);
+    if (player == nullptr)
+    {
+        cout << "Player not found" << endl;
+    }
+    else
+    {
+        cout << "Player found" << endl;
+        player->data.display();
+    }
 
     return 0;
 }
