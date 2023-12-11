@@ -1,8 +1,4 @@
-#include <iostream>
-#include <string>
-#include <chrono>
-#include <thread>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -184,18 +180,48 @@ public:
         }
     }
 
-    void display()
+    void display(string filter = "default")
     {
-        cout << "Team ID: " << id << endl;
-        cout << "Team Name: " << name << endl;
-        cout << "Team President: " << president << endl;
-        cout << "Team Players: " << endl;
-        if (players != nullptr)
+        if (filter == "default")
         {
-            players->display();
-        }
+            cout << "Team ID: " << id << endl;
+            cout << "Team Name: " << name << endl;
+            cout << "Team President: " << president << endl;
+            cout << "Team Players: " << endl;
+            if (players != nullptr)
+            {
+                players->display();
+            }
 
-        cout << endl;
+            cout << endl;
+        }
+        else if (filter == "bySalary")
+        {
+            cout << "Team ID: " << id << endl;
+            cout << "Team Name: " << name << endl;
+            cout << "Team President: " << president << endl;
+            cout << "Team Players: " << endl;
+            if (players != nullptr)
+            {
+                Node<Player> *current = players->getHead();
+                vector<Player> playersVector;
+                while (current != nullptr)
+                {
+                    playersVector.push_back(current->data);
+                    current = current->next;
+                }
+
+                sort(playersVector.begin(), playersVector.end(), [](const Player &a, const Player &b)
+                     { return a.salary > b.salary; });
+
+                for (int i = 0; i < playersVector.size(); i++)
+                {
+                    playersVector[i].display();
+                }
+            }
+
+            cout << endl;
+        }
     }
 
     void updateTeamInfo(const string &newName, const string &newPresident)
@@ -204,8 +230,6 @@ public:
         president = (!newPresident.empty()) ? newPresident : president;
         cout << "Team information updated successfully" << endl;
     }
-
-    // TODO: Update team information
 
     ~Team()
     {
@@ -229,7 +253,7 @@ int main()
     egyptianLeague.getHead()->data.addPlayer(7, "Mohamed El Neny", 29, 800000.0);
 
     // Add players to Zamalek
-    egyptianLeague.getHead()->next->data.addPlayer(10, "Achraf Bencharki", 27, 900000.0);
+    egyptianLeague.getHead()->next->data.addPlayer(10, "Achraf Bencharki", 27, 600000.0);
     egyptianLeague.getHead()->next->data.addPlayer(22, "Tarek Hamed", 29, 850000.0);
 
     // Add players to Al Masry
@@ -241,8 +265,10 @@ int main()
     Node<Team> *team = egyptianLeague.searchById(2);
     team->data.updateTeamInfo("New Zamalek", "New Mortada Mansour");
 
+    egyptianLeague.remove(1);
+
     // Display the league
-    egyptianLeague.display();
+    egyptianLeague.getHead()->data.display("bySalary");
 
     return 0;
 }
